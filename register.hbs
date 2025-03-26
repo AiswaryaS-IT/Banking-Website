@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Registration</title>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center;">Account Registration</h1>
+        <div class="registration">
+            <form id="registrationForm" action="/register" method="POST">
+                <input type="text" name="fullname" placeholder="Full Name" required><br><br>
+                <input type="text" name="address" placeholder="Address" required><br><br>
+                <input type="text" name="phone" placeholder="Phone Number" required><br><br>
+                <input type="email" name="email" placeholder="Email" required><br><br>
+                <select name="accountType">
+                    <option value="Savings">Savings</option>
+                    <option value="Checking">Checking</option>
+                </select><br><br>
+                <input type="number" name="deposit" placeholder="Initial Deposit" required><br><br>
+                <button type="submit">Create Account</button><br><br>
+                <button type="button" onclick="window.location.href='/home'">Cancel</button>
+            </form>
+            <div id="successMessage" style="text-align:center ;">
+                {{#if successMessage}}
+                    <p>{{successMessage}}</p>
+                    <p>Your account number is: {{accountNumber}}</p>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

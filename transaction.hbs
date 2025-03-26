@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center;">Transaction</h1>
+        <div class="transaction">
+             {{#if successMessage}}
+                <div class="success-message" style="text-align: center;">
+                    {{successMessage}}
+                </div>
+            {{/if}}
+            <form id="transactionForm" action="/transaction" method="POST">
+                <input type="text" id="accountNumber" placeholder="Account Number" name="accountNumber" required>
+                <input type="radio" id="credit" name="transactionType" value="Credit" checked>
+                <label for="credit">Credit</label>
+                <input type="radio" id="debit" name="transactionType" value="Debit">
+                <label for="debit">Debit</label>
+                <input type="number" id="amount" name="amount" placeholder="Amount" min="0" required>
+                <button type="submit">Proceed</button><br><br>
+                <button type="button" onclick="location.reload();">Cancel</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

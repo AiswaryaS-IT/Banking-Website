@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to SwiftBank</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 10px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .welcome-message {
+            text-align: center;
+            font-size: medium;
+            font-family: sans-serif;
+            color: rgba(3, 11, 173, 0.829);
+        }
+
+        #transactionHistoryTable {
+            display: none;
+        }
+
+        #transactionHistoryTable table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #transactionHistoryTable th, #transactionHistoryTable td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #transactionHistoryTable th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to SwiftBank</h1>
+        <div class="welcome-message">
+            <p>Welcome, {{ fullname }}!</p>
+            <p>Proceed with your transaction or check transaction history</p>
+        </div>
+        <div class="navigation">
+            <a href="/transaction" class="btn">New Transaction</a>
+            <button id="transactionHistoryBtn" class="btn">Transaction History</button>
+            <button id="balanceBtn" class="btn">Check Balance</button>
+        </div>
+        <div id="transactionHistoryTable">
+            <h2>Transaction History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Transaction Type</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionHistoryBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const balanceBtn = document.getElementById('balanceBtn');
+
+    balanceBtn.addEventListener('click', async () => {
+        try {
+            const response = await fetch(`/balance?accountNumber={{accountNumber}}`);
+            const data = await response.json();
+            
+            if (data.balance !== undefined) {
+                alert(`Your balance is: Rs.${data.balance}`);
+            } else {
+                alert('Unable to fetch balance. Please try again later.');
+            }
+        } catch (error) {
+            console.error('Error fetching balance:', error);
+            alert('Error fetching balance. Please try again later.');
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const transactionHistoryBtn = document.getElementById('transactionHistoryBtn');
+    const transactionHistoryTable = document.getElementById('transactionHistoryTable');
+    const transactionHistoryBody = document.getElementById('transactionHistoryBody');
+
+    transactionHistoryBtn.addEventListener('click', async () => {
+        transactionHistoryBody.innerHTML = ''; 
+        transactionHistoryTable.style.display = 'none'; 
+        const accountNumber = "{{accountNumber}}";
+
+        try {
+            const response = await fetch(`/welcome/transactions?accountNumber=${accountNumber}`);
+            const data = await response.json();
+
+            console.log('Transaction history data:', data);
+
+            if (data.transactions && data.transactions.length > 0) {
+                data.transactions.forEach(transaction => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${transaction.transaction_date}</td>
+                        <td>${transaction.transaction_type}</td>
+                        <td>${transaction.amount}</td>
+                    `;
+                    transactionHistoryBody.appendChild(row);
+                });
+                transactionHistoryTable.style.display = 'block';
+            } else {
+                console.log('No transaction history data found.');
+            }
+        } catch (error) {
+            console.error('Error fetching transaction history:', error);
+            
+        }
+    });
+});
+</script>
+
+</body>
+</html>
